@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Supercharged</title>
+    <style type="text/css">
+      #input {
+        width: 0px;
+        height: 0px;
+        overflow: hidden;
+      }
+      #input + label {
+        display: inline-block;
+        background-color: #777;
+        font-family: sans-serif;
+        padding: 5px;
+        font-size: 2em;
+      }
+      #input:focus + label {
+        outline: 5px solid blue;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+    <input type="file" accept="image/*" name="input" id="input">
+      <label for="input">Choose File</label>
+    </div>
+    <br>
+
+    <canvas id="preview"></canvas>
+
+      <script type="text/javascript">
+        
+        const $input = document.getElementById('input');
+        const $preview = document.getElementById('preview');
+        const previewContext = $preview.getContext('2d');
+
+        const fileReader = new FileReader();
+        const image = new Image();
+
+        function applyFilter(){
+          const imageData = previewContext.getImageData(0, 0, image.width, image.height);
+          console.log({imageData});
+        }
+
+        image.addEventListener('load', (e)=> {
+          $preview.width = image.width;
+          $preview.height = image.width;
+          previewContext.drawImage(image, 0, 0);
+          // document.body.appendChild(image);
+
+          applyFilter();
+        });
+
+        fileReader.addEventListener('load', (event)=> {
+          const imageBase64 = event.target.result;
+          image.src = imageBase64;
+        });
+
+        $input.addEventListener('change', (event) => {
+          const file = event.target.files[0];
+          fileReader.readAsDataURL(file);
+          
+        });
+      </script>
+    </inpupt>
+  </body>
+</html>
