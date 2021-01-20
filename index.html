@@ -35,31 +35,29 @@
         const $preview = document.getElementById('preview');
         const previewContext = $preview.getContext('2d');
 
-        const fileReader = new FileReader();
+        // const fileReader = new FileReader();
         const image = new Image();
 
         function applyFilter(){
           const imageData = previewContext.getImageData(0, 0, image.width, image.height);
-          console.log({imageData});
+          
+          for(let x = 0; x < image.width; x++){
+            for(let y = 0; y < image.height; y++){
+              let index = (x + (y * image.width)) * 4;
+              imageData.data[index + 3] = 127;
+            }
+          }
+          previewContext.putImageData(imageData, 0, 0);
         }
-
-        image.addEventListener('load', (e)=> {
-          $preview.width = image.width;
-          $preview.height = image.width;
-          previewContext.drawImage(image, 0, 0);
-          // document.body.appendChild(image);
-
-          applyFilter();
-        });
-
-        fileReader.addEventListener('load', (event)=> {
-          const imageBase64 = event.target.result;
-          image.src = imageBase64;
-        });
 
         $input.addEventListener('change', (event) => {
           const file = event.target.files[0];
-          fileReader.readAsDataURL(file);
+          createImageBitmap(file)
+          .then((bitmap) => {
+            $preview.width = bitmap.width;
+            $preview.height = bitmap.width;
+            previewContext.drawImage(bitmap, 0, 0);
+          });
           
         });
       </script>
