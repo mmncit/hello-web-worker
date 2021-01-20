@@ -35,15 +35,12 @@
         const $preview = document.getElementById('preview');
         const previewContext = $preview.getContext('2d');
 
-        // const fileReader = new FileReader();
-        const image = new Image();
-
         function applyFilter(){
-          const imageData = previewContext.getImageData(0, 0, image.width, image.height);
+          const imageData = previewContext.getImageData(0, 0, $preview.width, $preview.height);
           
-          for(let x = 0; x < image.width; x++){
-            for(let y = 0; y < image.height; y++){
-              let index = (x + (y * image.width)) * 4;
+          for(let x = 0; x < imageData.width; x++){
+            for(let y = 0; y < imageData.height; y++){
+              let index = (x + (y * imageData.width)) * 4;
               imageData.data[index + 3] = 127;
             }
           }
@@ -57,6 +54,7 @@
             $preview.width = bitmap.width;
             $preview.height = bitmap.width;
             previewContext.drawImage(bitmap, 0, 0);
+            applyFilter();
           });
           
         });
